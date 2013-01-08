@@ -1,54 +1,67 @@
-YUI().use('node', function (Y) {
-     //For debugging in the console as Y is used in by other parts of cPanel in the Y = YAHOO (2) context.
-    window.Yn = Y;
+YUI.add('charts', function(Y) {
+    var Lang = Y.Lang,
+    Node = Y.Node,
+    JSON = Y.JSON;
 
-    var PAGE_DIRECTION = PAGE_DIRECTION || Y.one('html')._node.dir;
-
-    var Utils = {},
-          App ={};
-
-    Utils = {
-            //TODO: fix categories and pages performance
-            /* Cache commonly used DOM elements */
-            elements: {
-                progressBars: Y.all('#content-stats .progress')
-            }
-
-        };
-
-    App = {
-        getProgressbarState: function(percentage, config){
-            var percent = percentage * 1;
-            if(!config) {
-                config = {"0":'zero',
-                "20":'twenty',
-                 "40":'forty',
-                 "60":'sixty'};
-            }
-            var range = 0;
-            var state;
-            for(var key in config) {
-                var upperLimit = key*1;
-                if(percent > upperLimit && upperLimit > range){
-                    range = upperLimit;
-                    state = key;
+    Y.Charts = Y.Base.create('charts', Y.Widget, [], {
+        initializer: function (){
+            Y.log("reached charts initializer");
+        },
+        getBarCssClass: function (){
+            var cssClassConfig = this.get('cssClassConfig'),
+            srcNode = this.get('srcNode'),
+            percentage = this.get('percentage');
+            var max_range = 0;
+            var limit;
+            for(var key in cssClassConfig) {
+                var key_num = key * 1;
+                if(percentage > key_num && key_num > max_range){
+                    max_range = key_num;
+                    limit = key;
                 }
             }
-            return config[state];
-
+            return config[limit];
+        },
+        renderUI: function (){
+            this.get('contentBox').addClass(getBarCssClass());
         }
+    }, {
+    ATTRS : {
+        cssClassConfig: {
+            value:{
+                 "30"  :'progress-success',
+                 "60"  :'progress-warning',
+                 "0"    :'progress-info',
+                  "90" :'progress-danger'
+            },
+            validator: Lang.isObject
+        },
+        visibleWhenInfinite: {
+            value: false,
+            validator: Lang.isBoolean
+        },
+        renderHTML: {
+            value:false,
+            validator: Lang.isBoolean
+        },
+        percentage : {
+            value:0,
+            validator: Lang.isNumber
+        }
+    }
+});
+}, "1.0.0", {
+    requires: ['base-build', 'widget', 'node'] });
 
-    };
-
-    Utils.elements.progressBars.each(function(node){
+YUI.use('charts', function (Y) {
+    var progressBars = Y.all('#content-stats .progress');
+    progressBars.each(function(node){
             var bar = node,
-            percentage = node.getAttribute('data-percentage');
-            var state = App.getProgressbarState(percentage,
-                {
-                 "30":'progress-success',
+            percent = node.getAttribute('data-percentage');
+            var c = new c.Charts( {percentage: percent, cssClassConfig: {"30":'progress-success',
                 "60":'progress-warning',
                 "0":'progress-info',
-                 "90":'progress-danger'});
-            node.addClass(state);
-            });
+                 "90":'progress-danger'}});
+            c.render('#content-stats .progress');
+        });
 });
