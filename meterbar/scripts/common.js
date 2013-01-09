@@ -50,3 +50,14 @@
 //             node.addClass(state);
 //             });
 // });
+
+// YUI().use('ChartsPlugin', 'node', function (Y) {
+//     var progressBars = Y.all('#content-stats .progress');
+//     progressBars.each(function(node){
+//             var bar = node,
+//             percent = node.getAttribute('data-percentage');
+//             node.plug(ChartsPlugin);
+//             node.charts.renderChart();
+//         });
+
+// });

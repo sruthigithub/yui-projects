@@ -23,7 +23,8 @@ YUI.add('charts', function(Y) {
             return config[limit];
         },
         renderUI: function (){
-            this.get('contentBox').addClass(getBarCssClass());
+            var cssClass = this.getBarCssClass();
+            this.get('contentBox').addClass(cssClass);
         }
     }, {
     ATTRS : {
@@ -47,21 +48,25 @@ YUI.add('charts', function(Y) {
         percentage : {
             value:0,
             validator: Lang.isNumber
+        },
+        container : {
+            value: {},
+            validator:Lang.isObject
         }
     }
 });
 }, "1.0.0", {
     requires: ['base-build', 'widget', 'node'] });
 
-YUI.use('charts', function (Y) {
+YUI().use('charts', function (Y) {
     var progressBars = Y.all('#content-stats .progress');
     progressBars.each(function(node){
             var bar = node,
             percent = node.getAttribute('data-percentage');
-            var c = new c.Charts( {percentage: percent, cssClassConfig: {"30":'progress-success',
+            var c = new Y.Charts( {percentage: percent, cssClassConfig: {"30":'progress-success',
                 "60":'progress-warning',
                 "0":'progress-info',
-                 "90":'progress-danger'}});
-            c.render('#content-stats .progress');
+                 "90":'progress-danger'}, container: node});
+            c.render(node);
         });
 });
