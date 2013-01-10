@@ -49,8 +49,8 @@ YUI().add('charts-plugin', function (Y) {
 }, '1.0', { requires: ['base-build', 'plugin', 'node'] });
 
 YUI().use( 'charts-plugin', 'node', function (Y) {
-    var progressBars = Y.all('#content-stats .progress');
-    progressBars.each(function(n){
+    //var progressBars = Y.all('#content-stats .progress');
+    Y.all('[data-percentage]').each(function(n){
             var bar = n,
             percent = n.getAttribute('data-percentage');
             Y.log(percent);
