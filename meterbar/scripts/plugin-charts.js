@@ -1,6 +1,7 @@
 YUI().add('charts-plugin', function (Y) {
 
     var Lang = Y.Lang;
+
     ChartPlugin = Y.Base.create('chartplugin', Y.Plugin.Base, [], {
         initializer: function () {
             if (this.get('rendered')) {
@@ -11,10 +12,8 @@ YUI().add('charts-plugin', function (Y) {
         },
         addCssClass: function (){
             var boundingBox = this.get('host');
-            Y.log(boundingBox);
             var cssClassConfig = this.get('cssClassConfig'),
             percentage = this.get('percentage');
-            Y.log(percentage);
             var max_range = 0;
             var limit;
             for(var key in cssClassConfig) {
@@ -53,7 +52,6 @@ YUI().use( 'charts-plugin', 'node', function (Y) {
     Y.all('[data-percentage]').each(function(n){
             var bar = n,
             percent = n.getAttribute('data-percentage');
-            Y.log(percent);
             n.plug(ChartPlugin, {percentage: percent*1});
             n.meterbar.addCssClass();
         });
