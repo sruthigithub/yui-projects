@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+            <script src="http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js"></script>
+            <script type="text/javascript">
+            YUI().use('autocomplete', 'autocomplete-filters', 'autocomplete-highlighters', function (Y) {
+            var states = [
+                'faa.com',
+                'faa.test.tld',
+                'faa.one.tld',
+                'faa.mail.tld',
+            ];
+
+            Y.one('#ac-input').plug(Y.Plugin.AutoComplete, {
+                resultFilters: customFilter,
+                resultHighlighter: 'phraseMatch',
+                source           : states,
+                resultFormatter: customFormatter
+              });
+            function customFormatter(query, results) {
+              // Iterate over the array of tweet result objects and return an
+              // array of HTML strings.
+              return Y.Array.map(results, function (result) {
+
+                var email = query.split("@")[0];
+
+                // Use string substitution to fill out the tweet template and
+                // return an HTML string for this result.
+                return result.raw = result.text = result.display = email + "@" + result.text;
+              });
+            }
+            // Simple example of a case-insensitive phrase matching custom
+            // filter.
+            function customFilter(query, results) {
+              var queryToLower = query.toLowerCase();
+
+              if(query.indexOf("@") !== -1) {
+                  // Iterate through the array of results and return a filtered
+                  // array containing only results whose text includes the full
+                  // query.
+                  return Y.Array.filter(results, function (result) {
+                    if(query.endsWith("@")){
+                        return result;
+                    } else {
+                        var emailParts = query.split("@");
+                        if(emailParts.length == 2) {
+                            var domainPart = emailParts[1];
+                            if( result.text.toLowerCase().indexOf(domainPart) !== -1 ) {
+                                return result;
+                            }
+                        }
+                    }
+                  });
+              }
+            }
+
+            });
+            </script>
+    </head>
+    <body class="yui3-skin-sam">
+            <div id="demo" class="yui3-skin-sam"> <!-- You need this skin class -->
+                <label for="ac-input">Enter the name of a US state:</label><br>
+                <input id="ac-input" type="text">
+            </div>
+    </body>
+</html>

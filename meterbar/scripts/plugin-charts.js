@@ -1,14 +1,14 @@
-YUI().add('charts-plugin', function (Y) {
+YUI.add('charts-plugin', function (Y) {
 
     var Lang = Y.Lang;
 
     ChartPlugin = Y.Base.create('chartplugin', Y.Plugin.Base, [], {
         initializer: function () {
-            if (this.get('rendered')) {
-                this.addCssClass();
-            } else {
-                this.afterHostMethod('renderUI', this.addCssClass);
-            }
+            // if (this.get('rendered')) {
+            //     this.addCssClass();
+            // } else {
+            //     this.afterHostMethod('renderUI', this.addCssClass);
+            // }
         },
         addCssClass: function (){
             var boundingBox = this.get('host');
@@ -55,5 +55,5 @@ YUI().use( 'charts-plugin', 'node', function (Y) {
             n.plug(ChartPlugin, {percentage: percent*1});
             n.meterbar.addCssClass();
         });
-
+    window.Y = Y;
 });
